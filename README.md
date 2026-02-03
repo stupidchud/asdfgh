@@ -1,4 +1,7 @@
 # asdfgh
+![Language](https://img.shields.io/badge/python-3.8+-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
 
 Yet another advanced Discord bot written in Python using discord.py
 
@@ -57,6 +60,5 @@ asdfgh collects and stores server IDs, user IDs, and related data necessary for 
 This bot is provided as-is. By using this bot, you agree that the bot owner is not liable for any issues arising from its use. The bot owner reserves the right to modify or terminate service at any time.
 
 # License
-
 
 MIT
