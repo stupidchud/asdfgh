@@ -2,7 +2,6 @@ from typing import Optional, Any, Tuple, List
 
 import aiosqlite
 
-
 class Database:
     """Database wrapper with auto-commit"""
 
@@ -36,6 +35,12 @@ class Database:
 
     async def fetchrows(self, query: str, params: Tuple = ()) -> aiosqlite.Cursor:
         """Execute a query and return the cursor for row iteration"""
+        await self.connect()
+        cursor = await self._conn.execute(query, params)
+        return cursor
+
+    async def fetchrow(self, query: str, params: Tuple = ()) -> aiosqlite.Cursor:
+        """Execute a query and return the cursor for single row iteration"""
         await self.connect()
         cursor = await self._conn.execute(query, params)
         return cursor
