@@ -68,18 +68,21 @@ class Gate(commands.Cog):
                 avatar = excluded.avatar,
                 action = excluded.action
             """,
-            context.guild.id,
-            flags.age,
-            int(flags.avatar),
-            flags.action.value if flags.action else None,
+            (
+                context.guild.id,
+                flags.age,
+                int(flags.avatar),
+                flags.action.value if flags.action else None,
+            )
         )
 
-        return await context.success(
-            f"join gate has been enabled with age requirement: **{flags.age}**"
+        return await context.confirm(
+            f"join gate has been enabled"
+            + (f" with age requirement: **{flags.age}**" if flags.age else "")
             + (f" and action: **{flags.action.value}**" if flags.action else "")
             + (
-                f" and default avatar check: **{flags.avatar}**"
-                if flags.avatar is not None
+                f" and default avatar check: **enabled**"
+                if flags.avatar
                 else ""
             )
         )
@@ -98,7 +101,7 @@ class Gate(commands.Cog):
             FROM join_gate 
             WHERE guild_id = ?
             """, 
-            context.guild.id
+            (context.guild.id,)
         )
 
         if not existing:
@@ -112,13 +115,15 @@ class Gate(commands.Cog):
                 action = COALESCE(?, action)
             WHERE guild_id = ?
             """,
-            flags.age,
-            int(flags.avatar) if flags.avatar is not None else None,
-            flags.action.value if flags.action else None,
-            context.guild.id,
+            (
+                flags.age,
+                int(flags.avatar) if flags.avatar is not None else None,
+                flags.action.value if flags.action else None,
+                context.guild.id,
+            )
         )
 
-        return await context.success(
+        return await context.confirm(
             f"join gate has been enabled with age requirement: **{flags.age}**"
             + (f" and action: **{flags.action.value}**" if flags.action else "")
             + (
@@ -144,10 +149,10 @@ class Gate(commands.Cog):
             DELETE FROM join_gate 
             WHERE guild_id = ?
             """,
-            context.guild.id,
+            (context.guild.id,)
         )
 
-        return await context.success("join gate has been disabled")
+        return await context.confirm("join gate has been disabled")
 
 
     @gate.command(
@@ -166,7 +171,7 @@ class Gate(commands.Cog):
             FROM join_gate 
             WHERE guild_id = ?
             """,
-            context.guild.id,
+            (context.guild.id,)
         )
 
         if not settings:
@@ -178,16 +183,23 @@ class Gate(commands.Cog):
         except (ValueError, KeyError):
             action = Punishment.KICK
 
+        conditions = []
+        if age_requirement:
+            conditions.append(f"account age below **{age_requirement}**")
+        if avatar_check:
+            conditions.append("**no avatar**")
+
+        action_text = {
+            Punishment.BAN: "banned",
+            Punishment.KICK: "kicked",
+            Punishment.MUTE: "muted",
+            Punishment.TIMEOUT: "timed out"
+        }.get(action, "kicked")
+
         return await context.send(
-            f"users with "
-            + (f"account age below **{age_requirement}**" if age_requirement else "")
-            + (" or " if age_requirement and avatar_check else "")
-            + ("**no avatar**" if avatar_check else "")
-            + (
-                f" will be **{action.value}ed**"
-                if age_requirement or avatar_check
-                else "no restrictions configured"
-            )
+            f"users with {' or '.join(conditions)} will be **{action_text}**"
+            if conditions
+            else "No restrictions configured"
         )
 
 
@@ -199,7 +211,7 @@ class Gate(commands.Cog):
             FROM join_gate 
             WHERE guild_id = ?
             """,
-            member.guild.id,
+            (member.guild.id,)
         )
 
         if not settings:
