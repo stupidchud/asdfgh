@@ -15,6 +15,7 @@ class Settings:
         "miscellaneous.prefix",
         "miscellaneous.help",
         "crypto.price",
+        "miscellaneous.server",
         "protection.gate",
         # "developer",
         # "socials",
@@ -58,5 +59,4 @@ class Emoji:
     spotify = ""
 
 class Color:
-
     default = 0x2f3136
