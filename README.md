@@ -32,7 +32,7 @@ LASTFM_API_KEY=""   # Your lastfm api key
 
 5. #### Setup database
 
-Do this through:
+Create the `/data/sqlite` folder in root of your project, then:
 
 ```
 sqlite3 data/sqlite/main.db < helpers/schema/tables.sql
@@ -57,5 +57,6 @@ asdfgh collects and stores server IDs, user IDs, and related data necessary for 
 This bot is provided as-is. By using this bot, you agree that the bot owner is not liable for any issues arising from its use. The bot owner reserves the right to modify or terminate service at any time.
 
 # License
+
 
 MIT
