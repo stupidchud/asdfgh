@@ -18,3 +18,14 @@ CREATE TABLE IF NOT EXISTS join_gate (
     action TEXT DEFAULT 'kick',
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS antinuke (
+    guild_id INTEGER NOT NULL,
+    module TEXT NOT NULL,
+    threshold TEXT NOT NULL DEFAULT '3',
+    punishment TEXT NOT NULL DEFAULT 'kick',
+    enabled BOOLEAN NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (guild_id, module)
+);

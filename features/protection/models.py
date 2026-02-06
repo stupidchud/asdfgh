@@ -6,3 +6,5 @@ class Punishment(str, Enum):
     KICK = "kick"
     MUTE = "timeout"
     TIMEOUT = "timeout"
+    STRIP = "strip"
+    STRIPSTAFF = "stripstaff"
