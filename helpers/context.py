@@ -14,8 +14,8 @@ class Context(DiscordContext):
 
     async def confirm(
         self,
-        emoji: Optional[str] = config.Emoji.Context.success,
         message: Optional[str] = None,
+        emoji: Optional[str] = config.Emoji.Context.success,
     ) -> discord.Message:
         return await (
             self.send(f"{emoji} {message}")
@@ -25,8 +25,8 @@ class Context(DiscordContext):
 
     async def error(
         self,
-        emoji: Optional[str] = config.Emoji.Context.error,
         message: Optional[str] = None,
+        emoji: Optional[str] = config.Emoji.Context.error,
     ) -> discord.Message:
         return await (
             self.send(f"{emoji} {message}")
@@ -36,8 +36,8 @@ class Context(DiscordContext):
 
     async def warn(
         self,
-        emoji: Optional[str] = config.Emoji.Context.warning,
         message: Optional[str] = None,
+        emoji: Optional[str] = config.Emoji.Context.warning,
     ) -> discord.Message:
         return await (
             self.send(f"{emoji} {message}")

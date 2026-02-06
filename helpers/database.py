@@ -2,6 +2,7 @@ from typing import Optional, Any, Tuple, List
 
 import aiosqlite
 
+
 class Database:
     """Database wrapper with auto-commit"""
 

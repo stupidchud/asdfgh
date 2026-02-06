@@ -15,7 +15,7 @@ from .models import Punishment
 class Flags(commands.FlagConverter, prefix="--", delimiter=" "):
     age: Optional[str] = commands.flag(default=None, description="Account age")
     avatar: Optional[bool] = commands.flag(default=False, description="Check for default avatar")
-    action: Optional[Punishment] = commands.flag(default=Punishment.KICK, description="Action to take")
+    do: Optional[Punishment] = commands.flag(default=Punishment.KICK, description="Action to take")
 
 
 class Gate(commands.Cog):
@@ -58,6 +58,7 @@ class Gate(commands.Cog):
         """
         Enable the join gate
         """
+        print(flags)
         await self.db.execute(
             """
             INSERT INTO join_gate (guild_id, age, avatar, action)
