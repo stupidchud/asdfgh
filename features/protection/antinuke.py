@@ -59,6 +59,7 @@ class Antinuke(commands.Cog):
         self,
         context: Context,
         modules: Optional[Modules] = None,
+        enabled: Optional[str] = "on",
         *,
         flags: Optional[Flags] = None
     ) -> discord.Message:
@@ -67,7 +68,21 @@ class Antinuke(commands.Cog):
         """
         if not modules:
             return await context.send_help()
-
+    
+        if enabled == "off":
+            await self.db.execute(
+                """
+                DELETE FROM antinuke
+                WHERE guild_id = ? AND module = ?
+                """, (
+                    context.guild.id,
+                    modules.value
+                )
+            )
+            return await context.send(
+                "turned off protection for **" + MODULES.get(modules, modules.value) + "**"
+            )
+        
         await self.db.execute(
             """
             INSERT INTO antinuke (
@@ -91,7 +106,7 @@ class Antinuke(commands.Cog):
         action = ACTIONS.get(flags.do, flags.do.value)
         module_action = MODULES.get(modules, modules.value)
         threshold_int = int(flags.threshold)
-        
+
         return await context.send(
             "anyone who **" + module_action + "** " + 
             (str(threshold_int) + " or more " if threshold_int > 1 else "") +
