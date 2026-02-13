@@ -2,14 +2,44 @@ from typing import Optional
 
 async def symboltocurrency(symbol: str) -> Optional[str]:
     symbol = symbol.lower()
-
     map = {
+        # thanks claude ai!
         "usd": "$",
         "eur": "€",
         "gbp": "£",
         "jpy": "¥",
+        "cny": "¥",
+        "inr": "₹",
+        "rub": "₽",
+        "krw": "₩",
+        "thb": "฿",
+        "php": "₱",
+        "try": "₺",
+        "ils": "₪",
+        "vnd": "₫",
+        "ngn": "₦",
+        "bdt": "৳",
+        "pkr": "₨",
+        "lkr": "₨",
+        "npr": "₨",
+        "lak": "₭",
+        "mnt": "₮",
+        "khr": "៛",
+        "gel": "₾",
+        "amd": "֏",
+        "kzt": "₸",
+        "uah": "₴",
+        "ghc": "₵",
+        "pyg": "₲",
+        "ars": "$",
+        "cop": "$",
+        "clp": "$",
+        "mxn": "$",
+        "brl": "R$",
         "aud": "A$",
-        # lazy add more as needed
+        "cad": "C$",
+        "nzd": "NZ$",
+        "hkd": "HK$",
+        "sgd": "S$",
     }
-
-    return map.get(symbol.lower())
+    return map.get(symbol)
