@@ -14,6 +14,7 @@ class Database:
         """Establish database connection"""
         if self._conn is None:
             self._conn = await aiosqlite.connect(self.db_path)
+            self._conn.row_factory = aiosqlite.Row 
 
     async def execute(self, query: str, params: Tuple = ()) -> aiosqlite.Cursor:
         """Execute a query and auto-commit"""
@@ -21,6 +22,12 @@ class Database:
         cursor = await self._conn.execute(query, params)
         await self._conn.commit()
         return cursor
+
+    async def fetch(self, query: str, params: Tuple = ()) -> List[Tuple]:
+        """Execute a query and fetch all results"""
+        await self.connect()
+        async with self._conn.execute(query, params) as cursor:
+            return await cursor.fetchall()
 
     async def fetchone(self, query: str, params: Tuple = ()) -> Optional[Any]:
         """Execute a query and fetch one result"""
