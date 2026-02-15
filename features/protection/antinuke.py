@@ -345,6 +345,37 @@ class Antinuke(commands.Cog):
     async def on_guild_role_create(self, role: discord.Role):
         await self.handle_infraction(role.guild.id, Modules.ROLES)
 
+    @commands.Cog.listener()
+    async def on_guild_emojis_update(
+        self,
+        guild: discord.Guild,
+        before: list[discord.Emoji],
+        after: list[discord.Emoji],
+    ):
+        if len(before) > len(after):
+            await self.handle_infraction(guild.id, Modules.EMOJIS)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member: discord.Member):
+        if member.bot:
+            await self.handle_infraction(member.guild.id, Modules.BOTADD)
+            
+    @commands.Cog.listener()
+    async def on_member_ban(self, guild: discord.Guild, user: discord.User):
+        await self.handle_infraction(guild.id, Modules.BAN)
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member: discord.Member):
+        # we check audit logs first to verify it was actually a kick
+        try:
+            async for entry in member.guild.audit_logs(limit=1, action=discord.AuditLogAction.kick):
+                if entry.target.id == member.id:
+                    await self.handle_infraction(member.guild.id, Modules.KICK)
+                break
+
+        except discord.Forbidden:
+            pass
+
     #
     # Infraction handler
     #
@@ -354,9 +385,13 @@ class Antinuke(commands.Cog):
             """
             SELECT threshold, punishment
             FROM antinuke
-            WHERE guild_id = ? AND module = ?
+            WHERE guild_id = ? 
+            AND module = ?
             """,
-            (guild_id, module.value),
+            (
+                guild_id, 
+                module.value
+            ),
         )
 
         if not row:
@@ -382,6 +417,10 @@ class Antinuke(commands.Cog):
                 discord.AuditLogAction.channel_delete,
                 discord.AuditLogAction.role_create,
                 discord.AuditLogAction.role_delete,
+                discord.AuditLogAction.emoji_delete,
+                discord.AuditLogAction.bot_add,
+                discord.AuditLogAction.ban,
+                discord.AuditLogAction.kick,
             ):
                 break
 
