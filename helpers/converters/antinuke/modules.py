@@ -6,8 +6,8 @@ class Modules(str, Enum):
     BOTADD = "botadd"
     BAN = "ban"
     KICK = "kick"
-    ROLES = "roles"       # Creating, deleting
-    CHANNELS = "channels" # Creating, deleting
+    ROLES = "roles"
+    CHANNELS = "channels" # Creating, Deleting
     EMOJIS = "emojis"     # Deleting
     WEBHOOKS = "webhooks" # Creating
 
@@ -19,4 +19,3 @@ class AntinukeModules(commands.Converter):
         except ValueError:
             valid = ", ".join([m.value for m in Modules])
             raise commands.BadArgument(f"Invalid module")
-
